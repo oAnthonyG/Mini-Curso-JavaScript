@@ -1,7 +1,7 @@
 const states = [true, false, false]
 
 function showItems(statesItems){
-    const item = Item`
+    const item = (pos) => Item`
         .item{ 
                 list-style: none;
                 height: calc(var(--line-height) * 3);
@@ -11,20 +11,21 @@ function showItems(statesItems){
                 transition: transform 100ms linear;
                 cursor: pointer;
             }
+            ${`pos-${pos}`}
         `
-    const itemActive = Item`
+    const itemActive = (pos) => Item`
             .item.active{
                 transform: scale(1.7);
             }
 
-            ${'active'}
+            ${`active pos-${pos}`}
         `
 
-    const items = statesItems.map(state => {
+    const items = statesItems.map((state, index) => {
         if(state){
-            return itemActive
+            return itemActive(index + 1)
         }
-        return item
+        return item(index + 1)
     })
 
     return items.join('')
@@ -48,12 +49,27 @@ const Action = (css) => {
     )
 }
 
+function clearAction(action){
+    action.classList.remove('second')
+    action.classList.remove('third')
+}
+
 function handleClick(event){
     const { target } = event
     const allItems = document.querySelectorAll('.item')
+    const action = document.querySelector('.action')
 
     allItems.forEach(item => item.classList.remove('active'))
     target.classList.add('active'); 
+
+    clearAction(action)
+    if(target.classList.contains('pos-2')) {
+        action.classList.add('second')
+    }
+
+    if(target.classList.contains('pos-3')) {
+        action.classList.add('third')
+    }
 }
 
 
@@ -79,13 +95,14 @@ const action = Action`
         border-radius: 50%;
         position: absolute;
         left: -5px;
+        transition: transform 300ms linear
     }
 
     .action.second{
         transform: translateX(224px);
     }
 
-    .action.thrid{
+    .action.third{
         transform: translateX(447px);
     }
     
