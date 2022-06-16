@@ -1,4 +1,9 @@
 const style = `<style>
+        :root{
+            --line-height: 10px;
+            --happy-color: #f9ca24;
+        }
+
         *{
             margin: 0;
             padding: 0;
